@@ -97,7 +97,7 @@ architecture top_basys3_arch of top_basys3 is
                i_reset   : in  STD_LOGIC;
                i_stop    : in  STD_LOGIC;
                i_up_down : in  STD_LOGIC;
-               o_floor   : out STD_LOGIC_VECTOR (3 downto 0)           
+               o_floor   : out STD_LOGIC_VECTOR (7 downto 0)           
              );
     end component elevator_controller_fsm;
 
@@ -183,7 +183,7 @@ begin
 	   
 	  sevenSegDecoder_fsm_init : sevenSegDecoder
 	  port map (
-	   i_D => w_floor,
+	   i_D => w_cath,
 	   o_S => seg(6 downto 0)
 	  );
 	   
@@ -192,8 +192,8 @@ begin
 	   port map (
 	       i_clk => w_clk,
 	       i_reset => w_tdm_reset,
-	       i_D3 => w_D3,
-	       i_D2 => w_D2,
+	       i_D3 => w_floor(7 downto 4),
+	       i_D2 => w_floor(3 downto 0),
 	       i_D1 => "0000",
 	       i_D0 => "0000",
 	       o_data => w_cath,
