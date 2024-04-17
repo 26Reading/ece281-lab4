@@ -138,14 +138,17 @@ architecture top_basys3_arch of top_basys3 is
     end component TDM4;
     
     
-    signal w_floor : std_logic_vector(7 downto 0) := "0010";
+    signal w_floor : std_logic_vector(7 downto 0) := "00000010";
     signal w_clk : std_logic;
+    signal w_clk2: std_logic;
     signal w_D3 : std_logic_vector(3 downto 0) := "0000";
     signal w_D2 : std_logic_vector(3 downto 0) := "0000";
     signal w_elevator_reset : std_logic; 
     signal w_clock_reset : std_logic;
+    signal w_clock2_reset : std_logic;
     signal w_an : std_logic_vector(3 downto 0);
     signal w_cath : std_logic_vector(3 downto 0);
+    signal w_tdm_reset : std_logic;
   
     
     
@@ -160,6 +163,14 @@ begin
        i_reset => w_clock_reset,
        o_clk   => w_clk
        );
+       
+    clkdiv_inst2 : clock_divider 		--instantiation of clock_divider to take 
+           generic map ( k_DIV => 2500000 ) -- 2 Hz clock from 100 MHz
+           port map (                          
+              i_clk   => clk,
+              i_reset => w_clock2_reset,
+              o_clk   => w_clk2
+              );
             
 	elevator_controller_fsm_init : elevator_controller_fsm
 	port map ( 
@@ -180,7 +191,7 @@ begin
 	TDM4_inst: TDM4
 	   port map (
 	       i_clk => w_clk,
-	       i_reset => btnL or btnU,
+	       i_reset => w_tdm_reset,
 	       i_D3 => w_D3,
 	       i_D2 => w_D2,
 	       i_D1 => "0000",
@@ -205,5 +216,7 @@ begin
 	an(0) <= '0';
 	w_elevator_reset <= btnR or btnU;
 	w_clock_reset <= btnL or btnU; 
+	w_clock2_reset <= btnL or btnU;
+	w_tdm_reset <= btnL or btnU;
 	
 end top_basys3_arch;
